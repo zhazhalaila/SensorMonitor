@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
-const validateForm = (errors) => {
-  let valid = true;
-  Object.values(errors).forEach(
-    // if we have an error string set valid to false
-    (val) => val.length > 0 && (valid = false)
-  );
-  return valid;
-}
+import validateForm from '../../component/FormValidate';
+import styles from '../../styles/Register';
+
+import Alert from '@material-ui/lab/Alert';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 
 class Register extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -25,8 +34,15 @@ class Register extends Component {
         mqtt_topic: '',
         password: '',
         password2: ''
-      }
+      },
+      alertOpen: false,
+      alertColor: 'error',
+      responseMessage: ''
     }
+  }
+
+  handleAlert = () => {
+    this.setState({alertOpen: false});
   }
 
   handleChange = (event) => {
@@ -55,49 +71,145 @@ class Register extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     if(validateForm(this.state.errors)) {
-      console.info('Valid Form')
-    }else{
+      let data = {
+        username: this.state.username,
+        email: this.state.email,
+        mqtt_topic: this.state.mqtt_topic,
+        password: this.state.password,
+      }
+      axios.post('/api/users/register', data)
+        .then(res => {
+          console.log(res);
+          this.setState({alertOpen: true, alertColor: "success", responseMessage: res.data.message});
+        })
+        .catch(err => {
+          let responseMessage = err.response.data.message;
+          console.log(err.response);
+          this.setState({alertOpen: true, responseMessage: responseMessage});
+        })
+    } else {
       console.error('Invalid Form')
     }
   }
 
   render() {
-    const {errors} = this.state;
+    const { classes } = this.props;
+
     return (
-      <div className='wrapper'>
-        <div className='form-wrapper'>
-          <h2>注册</h2>
-          <form onSubmit={this.handleSubmit} noValidate >
-            <div>
-              <label>用户名</label>
-              <input type='text' name='username' onChange={this.handleChange} noValidate />
-            </div>
-            <div>
-              <label>邮箱</label>
-              <input type='email' name='email' onChange={this.handleChange} noValidate />
-            </div>
-            <div>
-              <label>MQTT主题</label>
-              <input type='text' name='mqtt_topic' onChange={this.handleChange} noValidate />
-            </div>    
-            <div>
-              <label>密码</label>
-              <input type='password' name='password' onChange={this.handleChange} noValidate />
-              {errors.password.length > 0 && <span className='error'>{errors.password}</span>}
-            </div>
-            <div>
-              <label>重复输入密码</label>
-              <input type='password' name='password2' onChange={this.handleChange} noValidate />
-              {errors.password2.length > 0 && <span className='error'>{errors.password2}</span>}
-            </div>
-            <div>
-              <button>注册</button>
-            </div>
+      <Container component="main" maxWidth="xs">
+        <div className={classes.root}>
+          <Collapse in={this.state.alertOpen}>
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={this.handleAlert}
+                >
+                <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              severity={this.state.alertColor}
+            >
+              {this.state.responseMessage}
+            </Alert>
+          </Collapse>
+          <CssBaseline />
+        </div>
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form} onSubmit={this.handleSubmit}  noValidate>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Username"
+              name="username"
+              autoFocus
+              error={this.state.errors.username !== ''}
+              onChange={this.handleChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Email"
+              name="email"
+              autoFocus
+              onChange={this.handleChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Mqtt Topic"
+              name="mqtt_topic"
+              autoFocus
+              onChange={this.handleChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              error={this.state.errors.password !== ''}
+              helperText={this.state.errors.password}
+              onChange={this.handleChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password2"
+              label="Repeat Password"
+              type="password"
+              id="password"
+              error={this.state.errors.password2 !== ''}
+              helperText={this.state.errors.password2}
+              onChange={this.handleChange}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
           </form>
         </div>
-      </div>
+      </Container>
     );
   }
 }
 
-export default Register;
+Register.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Register);

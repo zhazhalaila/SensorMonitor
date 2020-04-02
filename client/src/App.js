@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Register from './containers/auth/Register';
+import Register from './containers/auth/Res';
 
 class App extends Component {
   render() {
