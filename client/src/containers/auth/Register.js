@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import { connect } from 'react-redux';
 
-import validateForm from '../../component/FormValidate';
 import styles from '../../styles/Register';
+import { registerUser } from '../../store/actions/authActions';
+import { alertDelete } from '../../store/actions/alertActions';
+import validateForm from '../../component/FormValidate';
 
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
@@ -34,15 +36,8 @@ class Register extends Component {
         mqtt_topic: '',
         password: '',
         password2: ''
-      },
-      alertOpen: false,
-      alertColor: 'error',
-      responseMessage: ''
+      }
     }
-  }
-
-  handleAlert = () => {
-    this.setState({alertOpen: false});
   }
 
   handleChange = (event) => {
@@ -64,55 +59,46 @@ class Register extends Component {
       default:
         break;
     }
-
+    console.log(this.state.errors);
     this.setState({errors, [name]: value});
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    if(validateForm(this.state.errors)) {
-      let data = {
+    console.log('[State error]', this.state.errors);
+    if (validateForm(this.state.errors)) {
+      const data = {
         username: this.state.username,
         email: this.state.email,
         mqtt_topic: this.state.mqtt_topic,
         password: this.state.password,
       }
-      axios.post('/api/users/register', data)
-        .then(res => {
-          console.log(res);
-          this.setState({alertOpen: true, alertColor: "success", responseMessage: res.data.message});
-        })
-        .catch(err => {
-          let responseMessage = err.response.data.message;
-          console.log(err.response);
-          this.setState({alertOpen: true, responseMessage: responseMessage});
-        })
-    } else {
-      console.error('Invalid Form')
+      this.props.registerUser(data);
+    } else{
+      console.log('[Form Submit]');
     }
   }
 
   render() {
     const { classes } = this.props;
-
     return (
       <Container component="main" maxWidth="xs">
         <div className={classes.root}>
-          <Collapse in={this.state.alertOpen}>
+          <Collapse in={this.props.alertOpen}>
             <Alert
               action={
                 <IconButton
                   aria-label="close"
                   color="inherit"
                   size="small"
-                  onClick={this.handleAlert}
+                  onClick={this.props.alertDelete}
                 >
                 <CloseIcon fontSize="inherit" />
                 </IconButton>
               }
-              severity={this.state.alertColor}
+              severity={this.props.alertColor}
             >
-              {this.state.responseMessage}
+              {this.props.responseMessage}
             </Alert>
           </Collapse>
           <CssBaseline />
@@ -212,4 +198,24 @@ Register.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Register);
+const mapStateToProps = state => {
+  return {
+    alertOpen: state.open,
+    alertColor: state.color,
+    responseMessage: state.message
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    registerUser: (data) => dispatch(registerUser(data)),
+    alertDelete: () => {
+      console.log('[Button work?]');
+      dispatch(alertDelete())
+    }
+  }
+}
+
+export default withStyles(styles)(
+  connect(mapStateToProps, mapDispatchToProps)(Register)
+);
