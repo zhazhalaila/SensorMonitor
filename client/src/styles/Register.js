@@ -1,6 +1,6 @@
 const styles = theme => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -18,9 +18,7 @@ const styles = theme => ({
   },
   root: {
     width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
+    marginTop: theme.spacing(1),
   }
 });
 

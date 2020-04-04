@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import styles from '../../styles/Register';
+import Aux from '../../hoc/Auxiliary';
 import { registerUser } from '../../store/actions/authActions';
 import { alertDelete } from '../../store/actions/alertActions';
 import validateForm from '../../component/FormValidate';
@@ -19,7 +20,6 @@ import Container from '@material-ui/core/Container';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-
 
 class Register extends Component {
   constructor(props) {
@@ -82,114 +82,116 @@ class Register extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Container component="main" maxWidth="xs">
-        <div className={classes.root}>
-          <Collapse in={this.props.alertOpen}>
-            <Alert
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={this.props.alertDelete}
-                >
-                <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-              severity={this.props.alertColor}
-            >
-              {this.props.responseMessage}
-            </Alert>
-          </Collapse>
-          <CssBaseline />
-        </div>
-        <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form} onSubmit={this.handleSubmit}  noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              label="Username"
-              name="username"
-              autoFocus
-              error={this.state.errors.username !== ''}
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              label="Email"
-              name="email"
-              autoFocus
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              label="Mqtt Topic"
-              name="mqtt_topic"
-              autoFocus
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              error={this.state.errors.password !== ''}
-              helperText={this.state.errors.password}
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password2"
-              label="Repeat Password"
-              type="password"
-              id="password"
-              error={this.state.errors.password2 !== ''}
-              helperText={this.state.errors.password2}
-              onChange={this.handleChange}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+      <Aux>
+        <Container component="main" maxWidth="xs">
+          <div className={classes.root}>
+            <Collapse in={this.props.alertOpen}>
+              <Alert
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={this.props.alertDelete}
+                  >
+                  <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                severity={this.props.alertColor}
+              >
+                {this.props.responseMessage}
+              </Alert>
+            </Collapse>
+            <CssBaseline />
+          </div>
+          <div className={classes.paper}>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={classes.form} onSubmit={this.handleSubmit}  noValidate>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Username"
+                name="username"
+                autoFocus
+                error={this.state.errors.username !== ''}
+                onChange={this.handleChange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Email"
+                name="email"
+                autoFocus
+                onChange={this.handleChange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Mqtt Topic"
+                name="mqtt_topic"
+                autoFocus
+                onChange={this.handleChange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                error={this.state.errors.password !== ''}
+                helperText={this.state.errors.password}
+                onChange={this.handleChange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password2"
+                label="Repeat Password"
+                type="password"
+                id="password"
+                error={this.state.errors.password2 !== ''}
+                helperText={this.state.errors.password2}
+                onChange={this.handleChange}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
-        </div>
-      </Container>
+            </form>
+          </div>
+        </Container>
+      </Aux>
     );
   }
 }
