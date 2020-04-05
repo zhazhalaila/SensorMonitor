@@ -6,20 +6,16 @@ import Aux from '../../hoc/Auxiliary';
 import Input from '../../component/Input/Input';
 import { loginUser } from '../../store/actions/authActions';
 import { alertDelete } from '../../store/actions/alertActions';
+import Alert from '../../component/Alert/Alert';
 
 import styles from '../../styles/Register';
 import { withStyles } from '@material-ui/core/styles';
-
-import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 
 class Login extends Component {
 
@@ -52,23 +48,12 @@ class Login extends Component {
       <Aux>
         <Container component="main" maxWidth="xs">
           <div className={classes.root}>
-            <Collapse in={this.props.alertOpen}>
-              <Alert
-                action={
-                  <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
-                    onClick={this.props.alertDelete}
-                  >
-                  <CloseIcon fontSize="inherit" />
-                  </IconButton>
-                }
-                severity={this.props.alertColor}
-              >
-                {this.props.responseMessage}
-              </Alert>
-            </Collapse>
+            <Alert
+                alertOpen={this.props.alertOpen}
+                alertDelete={() => this.props.alertDelete()}
+                alertColor={this.props.alertColor}
+                responseMessage={this.props.responseMessage}
+            />
             <CssBaseline />
           </div>
           <div className={classes.paper}>
