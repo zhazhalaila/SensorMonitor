@@ -7,11 +7,11 @@ import Aux from '../../hoc/Auxiliary';
 import { registerUser } from '../../store/actions/authActions';
 import { alertDelete } from '../../store/actions/alertActions';
 import validateForm from '../../component/FormValidate';
+import Input from '../../component/Input/Input';
 
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -109,64 +109,42 @@ class Register extends Component {
               Sign in
             </Typography>
             <form className={classes.form} onSubmit={this.handleSubmit}  noValidate>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Username"
+              <Input
                 name="username"
-                autoFocus
+                label="Username"
                 error={this.state.errors.username !== ''}
-                onChange={this.handleChange}
+                handleChange={(event) => this.handleChange(event)}
               />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Email"
+              <Input
                 name="email"
-                autoFocus
-                onChange={this.handleChange}
+                label="Email"
+                handleChange={(event) => this.handleChange(event)}
               />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Mqtt Topic"
+              <Input
                 name="mqtt_topic"
-                autoFocus
-                onChange={this.handleChange}
+                label="Mqtt Topic"
+                handleChange={(event) => this.handleChange(event)}
               />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
+              <Input
                 name="password"
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
                 error={this.state.errors.password !== ''}
-                helperText={this.state.errors.password}
-                onChange={this.handleChange}
+                text={this.state.errors.password}
+                handleChange={(event) => this.handleChange(event)}
               />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
+
+              <Input
                 name="password2"
                 label="Repeat Password"
                 type="password"
                 id="password"
                 error={this.state.errors.password2 !== ''}
-                helperText={this.state.errors.password2}
-                onChange={this.handleChange}
+                text={this.state.errors.password2}
+                handleChange={(event) => this.handleChange(event)}
               />
+              
               <Button
                 type="submit"
                 fullWidth
@@ -191,7 +169,7 @@ class Register extends Component {
             </form>
           </div>
         </Container>
-      </Aux>
+      </Aux> 
     );
   }
 }
@@ -202,9 +180,9 @@ Register.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    alertOpen: state.open,
-    alertColor: state.color,
-    responseMessage: state.message
+    alertOpen: state.err.open,
+    alertColor: state.err.color,
+    responseMessage: state.err.message
   }
 }
 
@@ -213,7 +191,7 @@ const mapDispatchToProps = dispatch => {
     registerUser: (data) => dispatch(registerUser(data)),
     alertDelete: () => {
       console.log('[Button work?]');
-      dispatch(alertDelete())
+      dispatch(alertDelete());
     }
   }
 }

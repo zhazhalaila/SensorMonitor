@@ -10,10 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import MyButton from '../Button/Button';
 
 class Navbar extends Component {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(props) {
-    super(props);
-  }
   
   componentDidMount() {
     console.log('[Navbar props]', this.props);
