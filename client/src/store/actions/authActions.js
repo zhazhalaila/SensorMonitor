@@ -1,6 +1,7 @@
 import axios from "axios";
 import jwt_decode from 'jwt-decode';
 
+import setAuthToken from '../../utils/setAuthToken';
 import {GET_ERRORS, SET_CURRENT_USER} from './types';
 
 //register user
@@ -29,7 +30,8 @@ export const loginUser = (userData) => {
         console.log('[res data]', res.data);
         const { access_token } = res.data;
         console.log('[access_token]', access_token);
-        localStorage.setItem('jwtaccess_token', access_token);
+        localStorage.setItem('access_token', access_token);
+        setAuthToken(access_token);
         const decoded = jwt_decode(access_token);
         dispatch(setCurrentUser(decoded));
       })

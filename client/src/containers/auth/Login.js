@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import Aux from '../../hoc/Auxiliary';
 import Input from '../../component/Input/Input';
@@ -25,6 +26,13 @@ class Login extends Component {
       username: null,
       password: null
     }
+  }
+
+  static getDerivedStateFromProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      nextProps.history.push('/profile');
+    }
+    return null;
   }
 
   handleChange = (event) => {
@@ -108,6 +116,7 @@ Login.propTypes = {
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     alertOpen: state.err.open,
     alertColor: state.err.color,
     responseMessage: state.err.message
@@ -125,5 +134,6 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(Login)
+  connect(mapStateToProps, mapDispatchToProps)
+  (withRouter(Login))
 );
